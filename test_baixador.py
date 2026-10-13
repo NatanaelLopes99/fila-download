@@ -170,18 +170,31 @@ class TestBaixador(unittest.TestCase):
         self.assertEqual(parcial.read_bytes(), CONTEUDO[:123])
 
     def test_interrupcao_salva_pendentes(self):
+        parcial_gravado = threading.Event()
+
+        def baixar_ate_interromper(sessao, url, destino, tentativas, parar, *args):
+            destino.parent.mkdir(parents=True, exist_ok=True)
+            parcial = destino.with_name(destino.name+'.part')
+            parcial.write_bytes(CONTEUDO[:4096])
+            parcial_gravado.set()
+            # Mantém a transferência em andamento até o lote receber Ctrl+C.
+            if not parar.wait(5):
+                raise AssertionError('O lote não sinalizou a interrupção aos downloads')
+            raise b.ErroInterrompido()
+
         def interromper(futuros):
-            limite = time.monotonic() + 3
-            while time.monotonic() < limite:
-                if any(arq.stat().st_size > 0 for arq in self.pasta.rglob('*.part')):
-                    break
-                time.sleep(0.001)
+            self.assertTrue(parcial_gravado.wait(5), 'Nenhum download gravou um parcial')
             raise KeyboardInterrupt
-        with patch.object(b, 'as_completed', interromper), patch.object(b, 'CHUNK', 4096):
+        with patch.object(b, 'as_completed', interromper), \
+             patch.object(b, 'baixar', baixar_ate_interromper):
             itens, (ok, pulados, falhas) = self.lote()
-        self.assertEqual(ok + pulados + len(falhas), len(itens))
-        self.assertGreater(len(falhas), 0)
-        self.assertTrue(any(arq.stat().st_size > 0 for arq in self.pasta.rglob('*.part')))
+        self.assertEqual((ok, pulados), (0, 0))
+        self.assertEqual([it for it, _ in falhas], itens)
+        self.assertTrue(all('interrompida' in motivo for _, motivo in falhas))
+        parciais = list(self.pasta.rglob('*.part'))
+        self.assertTrue(parciais)
+        self.assertTrue(all(arq.read_bytes() == CONTEUDO[:4096] for arq in parciais))
+        self.assertFalse(list(self.pasta.rglob('*.mp4')))
         b.salvar_falhas(self.pasta, falhas)
         self.assertEqual(b.ler_links(self.pasta/'falhas.txt', False), [it for it, _ in falhas])
 
