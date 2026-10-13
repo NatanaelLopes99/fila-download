@@ -1,0 +1,4 @@
+# O número é a posição geral do link, contando todas as temporadas.
+1;Primeiro episódio
+2;Segundo episódio
+3;Uma nova temporada

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baixador-lote"
+version = "0.1.0"
+description = "Baixador HTTP em lote com pastas, retomada, concorrência e limite de velocidade."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = [
+    "requests>=2.32.5,<3",
+    "tqdm>=4.67.1,<5",
+]
+
+[project.scripts]
+baixador = "baixador:main"
+
+[tool.setuptools]
+py-modules = ["baixador"]

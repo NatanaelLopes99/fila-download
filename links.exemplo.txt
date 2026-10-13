@@ -1,0 +1,7 @@
+# Exemplos fictícios: substitua por URLs reais de arquivos HTTP/HTTPS.
+[01 - Temporada 1]
+https://arquivos.example.com/serie/episodio-001.mp4
+https://arquivos.example.com/serie/episodio-002.mp4
+
+[02 - Temporada 2]
+https://arquivos.example.com/serie/episodio-003.mp4

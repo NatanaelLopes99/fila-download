@@ -1,0 +1,44 @@
+# Python / ambiente local
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.tmp-package/
+tmp*/
+
+# Listas pessoais e resultados de downloads
+/links.txt
+/titulos.txt
+falhas.txt
+*.log
+*.part
+*.part.json
+*.part.meta.json
+*.part.meta.json.tmp
+downloads/
+videos/
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.webm
+*.mp3
+
+# Configuração privada / sistema
+.env
+.env.*
+.codex/
+.agents/
+.aws/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

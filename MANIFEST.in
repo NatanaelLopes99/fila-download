@@ -1,0 +1,3 @@
+include LICENSE README.md COMO_USAR.md requirements.txt
+include links.exemplo.txt titulos.exemplo.txt
+include test_baixador.py
